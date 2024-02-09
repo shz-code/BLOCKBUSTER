@@ -13,5 +13,5 @@ const walletSchema = Schema(
   { timestamps: true }
 );
 
-module.exports.User = model("Wallet", walletSchema);
+module.exports.Wallet = model("Wallet", walletSchema);
 
