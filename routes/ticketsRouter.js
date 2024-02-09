@@ -6,7 +6,6 @@ const { Station } = require("../models/station");
 
 const handlePost = async (req, res) => {
   const body = req.body;
-  const lastTicket = await Ticket.find().sort({ _id: 1 }).limit(1);
   const wallet = await Wallet.findOne({ wallet_id: body.wallet_id });
   const trains = await Train.find();
 
@@ -21,8 +20,8 @@ const handlePost = async (req, res) => {
 
   let foundRoute = [];
   let stationTrains = [];
+  let calcFare = 0,foundFare = 0;
   trains.map((train) => {
-    // console.log(train);
     train.stops.map((stop) => {
       if (stop.station_id === Number(body.station_from)) {
         const t = new Date();
@@ -37,6 +36,7 @@ const handlePost = async (req, res) => {
             arrival_time: stop.arrival_time,
             departure_time: stop.departure_time,
           });
+          calcFare += Number(stop.fare);
         }
       } else if (
         stationTrains.length > 0 &&
@@ -48,6 +48,8 @@ const handlePost = async (req, res) => {
           arrival_time: stop.arrival_time,
           departure_time: stop.departure_time,
         });
+        calcFare += Number(stop.fare);
+        // console.log(stop.fare);
       }
     });
 
@@ -58,11 +60,14 @@ const handlePost = async (req, res) => {
         Number(body.station_to)
     ) {
       foundRoute.push([...stationTrains]);
+      foundFare = calcFare;
     } else {
       stationTrains = [];
+      calcFare = 0;
     }
   });
 
+  const lastTicket = await Ticket.find().sort({ _id: -1 }).limit(1);
   let lastId;
   if (lastTicket.length) lastId = lastTicket[0].ticket_id;
   else lastId = 0;
@@ -73,9 +78,9 @@ const handlePost = async (req, res) => {
     stations: [...foundRoute],
   });
 
-  if (wallet.balance - 30 < 0) {
+  if (wallet.balance - foundFare < 0) {
     return res.status(402).send({
-      message: `recharge amount: ${30} to purchase the thicket`,
+      message: `recharge amount: ${foundFare} to purchase the thicket`,
     });
   }
 
@@ -86,12 +91,12 @@ const handlePost = async (req, res) => {
   }
 
   ticket.save();
-  wallet.balance -= 30;
+  wallet.balance -= foundFare;
   wallet.save();
 
   return res.status(201).send({
     ticket_id: lastId + 1,
-    balance: wallet.balance - 30,
+    balance: wallet.balance - foundFare,
     wallet_id: body.wallet_id,
     stations: [...foundRoute],
   });
