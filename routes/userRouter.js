@@ -10,7 +10,7 @@ const handlePost = async (req, res) => {
     user.save();
     return res.status(201).send(body);
   } catch (err) {
-    return res.status(4004).send("Bad Request");
+    return res.status(404).send("Bad Request");
   }
 };
 
