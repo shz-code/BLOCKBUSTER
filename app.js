@@ -5,6 +5,7 @@ const userRouter = require("./routes/userRouter");
 const trainRouter = require("./routes/trainRouter");
 const stationRouter = require("./routes/stationRouter");
 const walletRouter = require("./routes/walletRouter");
+const ticketsRouter = require("./routes/ticketsRouter");
 
 // Loading environment variables from .env file
 require("dotenv").config();
@@ -38,6 +39,7 @@ app.use("/api/users", userRouter);
 app.use("/api/stations", stationRouter);
 app.use("/api/trains", trainRouter);
 app.use("/api/wallets", walletRouter);
+app.use("/api/tickets", ticketsRouter);
 
 app.listen(8000, () => {
   console.log("Server running on port 8000");
