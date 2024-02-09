@@ -10,7 +10,7 @@ const handlePost = async (req, res) => {
   const stops = body.stops;
 
   try {
-    // station.save();
+    train.save();
     return res.status(201).send({
       train_id: body.train_id,
       train_name: body.train_name,
