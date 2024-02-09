@@ -7,7 +7,7 @@ const handlePost = async (req, res) => {
   const body = req.body;
   const user = new User(body);
   try {
-    user.save();
+    await user.save();
     return res.status(201).send(body);
   } catch (err) {
     return res.status(404).send("Bad Request");
