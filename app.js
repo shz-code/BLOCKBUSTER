@@ -5,7 +5,7 @@ const userRouter = require("./routes/userRouter");
 const trainRouter = require("./routes/trainRouter");
 const stationRouter = require("./routes/stationRouter");
 const walletRouter = require("./routes/walletRouter");
-
+const optimalRouter = require("./routes/optimalRoutes");
 const ticketsRouter = require("./routes/ticketsRouter");
 
 // Loading environment variables from .env file
@@ -40,7 +40,7 @@ app.use("/api/users", userRouter);
 app.use("/api/stations", stationRouter);
 app.use("/api/trains", trainRouter);
 app.use("/api/wallets", walletRouter);
-
+app.use("/api/routes", optimalRouter);
 app.use("/api/tickets", ticketsRouter);
 
 app.listen(8000, () => {
