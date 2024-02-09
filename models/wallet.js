@@ -6,8 +6,8 @@ const walletSchema = Schema(
         balance: Number, 
         wallet_user:
             {
-            "user_id": Number,
-            "user_name": String,
+            user_id: Number,
+            user_name: String,
             }
         },
   { timestamps: true }
